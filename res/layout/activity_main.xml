@@ -1,0 +1,205 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    tools:context=".MainActivity" >
+
+    <RelativeLayout
+        android:id="@+id/main_studenplan"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:orientation="vertical"
+        android:onClick="onClick_Main_Studenplan" >
+
+        <RelativeLayout
+            android:id="@+id/main_stundenplan_quick"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="#cf000d" 
+            android:onClick="onClick_Main_Studenplan_Quick">
+
+            <TextView
+                android:id="@+id/TextView05"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="WIR"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#ffffff"
+                android:textSize="60sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="Stundenplan"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="50sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/main_noten"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:orientation="vertical"
+        android:onClick="onClick_Main_Noten" >
+
+        <RelativeLayout
+            android:id="@+id/main_noten_quick"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="#cf000d"
+            android:onClick="onClick_Main_Noten_Quick"  >
+
+            <TextView
+                android:id="@+id/TextView01"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="9.8"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#ffffff"
+                android:textSize="60sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="Noten"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="50sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/main_unterrichtsstoff"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:orientation="vertical"
+        android:onClick="onClick_Main_Unterrichtsstoff" >
+
+        <RelativeLayout
+            android:id="@+id/main_unterrichtsstoff_quick"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="#cf000d" 
+            android:onClick="onClick_Main_Unterrichtsstoff_Quick">
+
+            <TextView
+                android:id="@+id/TextView02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="2"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#ffffff"
+                android:textSize="60sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="Unterrichtsstoff"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="50sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/main_supplierplan"
+        android:layout_width="match_parent"
+        android:layout_height="170dp"
+        android:orientation="vertical" 
+        android:onClick="onClick_Main_Supplierplan">
+
+        <RelativeLayout
+            android:id="@+id/main_supplierplan_quick"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="#cf000d"
+            android:onClick="onClick_Main_Supplierplan_Quick" >
+
+            <TextView
+                android:id="@+id/TextView03"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="4"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#ffffff"
+                android:textSize="60sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="Supplierplan"
+            android:textAppearance="?android:attr/textAppearanceLarge" 
+            android:textSize="50sp"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/main_terminen"
+        android:layout_width="wrap_content"
+        android:layout_height="170dp"
+        android:orientation="vertical"
+        android:onClick="onClick_Main_Terminen" >
+
+        <RelativeLayout
+            android:id="@+id/main_terminen_quick"
+            android:layout_width="120dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="#cf000d" 
+            android:onClick="onClick_Main_Terminen_Quick">
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="3"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#ffffff"
+                android:textSize="60sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="Terminen"
+            android:textAppearance="?android:attr/textAppearanceLarge" 
+            android:textSize="50sp"/>
+    </RelativeLayout>
+
+</LinearLayout>

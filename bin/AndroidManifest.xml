@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.hsa"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="16" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:logo="@drawable/ic_gear_red"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.example.hsa.MainActivity"
+            android:label="@string/app_name" >
+            
+        </activity>
+        <activity
+            android:name="com.example.hsa.StundenplanActivity"
+            android:label="@string/title_activity_stundenplan"
+            android:parentActivityName="com.example.hsa.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.hsa.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.example.hsa.NotenActivity"
+            android:label="@string/title_activity_noten" >
+        </activity>
+        <activity
+            android:name="com.example.hsa.NotenFachActivity"
+            android:label="@string/title_activity_noten_fach"
+            android:parentActivityName="com.example.hsa.NotenActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.hsa.NotenActivity" />
+        </activity>
+        <activity
+            android:name="com.example.hsa.UnterrichtActivity"
+            android:label="@string/title_activity_unterricht"
+            android:parentActivityName="com.example.hsa.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.hsa.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.example.hsa.SupplierActivity"
+            android:label="@string/title_activity_supplier"
+            android:parentActivityName="com.example.hsa.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.hsa.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.example.hsa.TerminenActivity"
+            android:label="@string/title_activity_terminen"
+            android:parentActivityName="com.example.hsa.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.hsa.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.example.hsa.SettingActivity"
+            android:label="@string/title_activity_setting"
+            android:parentActivityName="com.example.hsa.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.hsa.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.example.hsa.LoginActivity"
+            android:label="@string/title_activity_login" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">HSA</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_stundenplan">StundenplanActivity</string>
+    <string name="title_activity_noten">NotenActivity</string>
+    <string name="title_activity_noten_fach">NotenFachActivity</string>
+    <string name="title_activity_unterricht">UnterrichtActivity</string>
+    <string name="title_activity_supplier">SupplierActivity</string>
+    <string name="title_activity_terminen">TerminenActivity</string>
+    <string name="title_activity_setting">SettingActivity</string>
+    <string name="title_activity_login">LoginActivity</string>
+
+</resources>
