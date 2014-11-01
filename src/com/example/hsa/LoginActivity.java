@@ -9,7 +9,7 @@ import android.widget.EditText;
 public class LoginActivity extends Activity {
 
 	EditText user;
-	EditText pass;
+	EditText pass ;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
