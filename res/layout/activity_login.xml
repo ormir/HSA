@@ -9,11 +9,10 @@
     tools:context=".LoginActivity" >
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/btnLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
         android:layout_marginBottom="38dp"
         android:background="#cf000d"
         android:onClick="onClick_Login"
@@ -21,29 +20,28 @@
         android:textColor="#ffffff" />
 
     <EditText
-        android:id="@+id/inputPass"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/button1"
-        android:ems="10"
-        android:inputType="textPassword" />
-
-    <EditText
         android:id="@+id/inputName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/inputPass"
-        android:layout_alignLeft="@+id/inputPass"
-        android:ems="10" >
+        android:layout_above="@+id/inputPass" >
 
         <requestFocus />
     </EditText>
 
+    <EditText
+        android:id="@+id/inputPass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnLogin"
+        android:layout_alignLeft="@+id/btnLogin"
+        android:layout_marginBottom="20dp"
+        android:ems="10"
+        android:inputType="textPassword" />
+
     <ImageView
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"
-        android:layout_height="600dp"
-        android:layout_alignParentLeft="true"
+        android:layout_height="400dp"
         android:layout_alignParentTop="true"
         android:src="@drawable/ic_gear_red" />
 
