@@ -1,15 +1,30 @@
 package com.example.hsa;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.example.hsa.LoginActivity.GetStudentDetails;
+
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -17,10 +32,34 @@ public class MainActivity extends Activity {
 	Animation in;
 	Animation out;
 	
+	// url to get all products list
+	private static String url_timetable_student = "http://app.htl-shkoder.com.dd24526.kasserver.com/android_connect/get_timetable_student.php";
+	JSONParser jParser = new JSONParser();
+	
+	// JSON Node names
+	private static final String TAG_SUCCESS = "success";
+	private static final String TAG_STUDENT = "student";
+	private static final String TAG_STUDENT_ID = "student_id";
+	private static final String TAG_DAY_WEEK = "day_week";
+	private static final String TAG_LESSON_SEQUENCE_ID = "lesson_sequence_id";
+	private static final String TAG_NAME = "name";
+	private static final String TAG_SUBJECT_ACR = "subject_acr";
+	private static final String TAG_TEACHER_ACR = "teacher_acr";
+		
+	// studens JSONArray
+	JSONArray student = null;
+	
+	// Quick show text
+	private String timetableQuickString = "Loading ...";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		// TODO Remove restricion for HTTPGet to run in main thread
+		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		StrictMode.setThreadPolicy(policy);
 		
 		// TODO set username as Title
 		setTitle("Ormir G.");
@@ -30,6 +69,8 @@ public class MainActivity extends Activity {
 		in = AnimationUtils.loadAnimation(this, R.anim.fadein);
 		out = AnimationUtils.loadAnimation(this, R.anim.fadeout);
 		
+		// Loading products in Background Thread
+		new GetTimetableDetails().execute();
 		
 	}
 
@@ -63,7 +104,7 @@ public class MainActivity extends Activity {
 		// TODO fixed text size
 		tv.setTextSize(30f);
 		// TODO Get data from database
-		tv.setText("AM, E, GG-AL, AL, D, WIR, ITP2");
+		tv.setText(timetableQuickString);
 		
 		// Start animation
 		//tv.startAnimation(in);
@@ -205,5 +246,88 @@ public class MainActivity extends Activity {
 	public void onClick_Settings(MenuItem v) {
 		startActivityForResult(new Intent(this, SettingActivity
 				.class), 1);
+	}
+	
+	/**
+	 * Background Async Task to Get complete student details
+	 * */
+	class GetTimetableDetails extends AsyncTask<String, String, String> {
+
+		/**
+		 * Before starting background thread Show Progress Dialog
+		 * */
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+
+		/**
+		 * Getting product details in background thread
+		 * */
+		protected String doInBackground(String... params) {
+
+			// updating UI from Background Thread
+			runOnUiThread(new Runnable() {
+				public void run() {
+					// Check for success tag
+					int success;
+					try {
+						// Building Parameters
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+						params.add(new BasicNameValuePair(TAG_DAY_WEEK, "we"));
+						params.add(new BasicNameValuePair(TAG_NAME, "5a"));
+
+						// getting product details by making HTTP request
+						// Note that product details url will use GET request
+						JSONObject json = jParser.makeHttpRequest(
+								url_timetable_student, "GET", params);
+
+						// check your log for json response
+						//Log.d("Single Student Details", json.toString());
+
+						// json success tag
+						success = json.getInt(TAG_SUCCESS);
+						if (success == 1) {
+							// successfully received product details
+							JSONArray studentObj = json
+									.getJSONArray(TAG_STUDENT); // JSON Array
+							
+							timetableQuickString = "";
+
+							// get first product object from JSON Array
+							//Loop through all timetable elements
+							for(int i = 0; i < studentObj.length(); i++){
+								JSONObject arrayStudent = studentObj.getJSONObject(i);
+								// product with this pid found
+								// display product data in EditText
+								if(i == 6){
+									((TextView)findViewById(R.id.main_stundenplan_quick_text)).setText(arrayStudent.getString(TAG_SUBJECT_ACR).toUpperCase());
+								}
+								
+								if(i==(studentObj.length()-1)){
+									timetableQuickString +=  arrayStudent.getString(TAG_SUBJECT_ACR).toUpperCase();
+								} else{
+									timetableQuickString +=  arrayStudent.getString(TAG_SUBJECT_ACR).toUpperCase()+",";
+								}
+							}
+						} else {
+							Toast.makeText(getApplicationContext(), "Timetable not feched", 
+									   Toast.LENGTH_SHORT).show();
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			return null;
+		}
+
+		/**
+		 * After completing background task Dismiss the progress dialog
+		 * **/
+		protected void onPostExecute(String file_url) {
+			Toast.makeText(getApplicationContext(), "Timetable fech finished.", 
+					   Toast.LENGTH_SHORT).show();
+		}
 	}
 }
