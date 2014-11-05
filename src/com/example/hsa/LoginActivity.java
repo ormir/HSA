@@ -36,7 +36,7 @@ public class LoginActivity extends Activity {
 	private ProgressDialog pDialog;
 
 	// url to get all products list
-	private static String url_student_detail = "http://app.htl-shkoder.com/android_connect/student_login.php";
+	private static String url_student_detail = "http://app.htl-shkoder.com.dd24526.kasserver.com/android_connect/student_login.php";
 
 	// JSON Node names
 	private static final String TAG_SUCCESS = "success";
@@ -75,7 +75,7 @@ public class LoginActivity extends Activity {
 		inputUser = eTxtUser.getText().toString();
 		inputPassword = eTxtPass.getText().toString();
 		
-		// Loading products in Background Thread
+		// Loading student in Background Thread
 		new GetStudentDetails().execute();
 	}
 	
