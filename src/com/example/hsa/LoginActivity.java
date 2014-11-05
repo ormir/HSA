@@ -43,6 +43,7 @@ public class LoginActivity extends Activity {
 	private static final String TAG_STUDENT = "student";
 	private static final String TAG_STUDENT_ID = "student_id";
 	private static final String TAG_NAME = "name";
+	private static final String TAG_LASTNAME = "lastname";
 
 	// studens JSONArray
 	JSONArray student = null;
@@ -134,7 +135,8 @@ public class LoginActivity extends Activity {
 							// display product data in EditText
 							// Checks if username and pass are true 
 							if(eTxtPass.getText().toString().equals("pass")){
-								startActivity(new Intent(LoginActivity.this, MainActivity.class).putExtra(TAG_STUDENT_ID, student.getString(TAG_STUDENT_ID)));
+								startActivity(new Intent(LoginActivity.this, MainActivity.class).putExtra(TAG_STUDENT_ID, student.getString(TAG_STUDENT_ID))
+																								.putExtra("student_name", student.getString(TAG_NAME)));
 							}
 						} else {
 							Toast.makeText(getApplicationContext(), "Username incorrect. Please try again.", 

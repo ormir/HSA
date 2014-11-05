@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
 		StrictMode.setThreadPolicy(policy);
 		
 		// TODO set username as Title
-		setTitle("Ormir G.");
+		setTitle(getIntent().getStringExtra("student_name"));
 		getActionBar().setIcon(R.drawable.ic_gear_red);
 		
 		// Load animation for the faddein fadeout effect
@@ -326,8 +326,8 @@ public class MainActivity extends Activity {
 		 * After completing background task Dismiss the progress dialog
 		 * **/
 		protected void onPostExecute(String file_url) {
-			Toast.makeText(getApplicationContext(), "Timetable fech finished.", 
-					   Toast.LENGTH_SHORT).show();
+			//Toast.makeText(getApplicationContext(), "Timetable fech finished.", 
+				//	   Toast.LENGTH_SHORT).show();
 		}
 	}
 }

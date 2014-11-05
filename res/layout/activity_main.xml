@@ -24,7 +24,7 @@
             android:onClick="onClick_Main_Studenplan_Quick">
 
             <TextView
-                android:id="@+id/TextView05"
+                android:id="@+id/main_stundenplan_quick_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
