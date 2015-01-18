@@ -17,7 +17,7 @@ public class UnterrichtActivity extends Activity {
 
 	TextView tv;
 	String fstr;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,60 +58,61 @@ public class UnterrichtActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	public void onClick_Unterricht_Fach(View v) {
-		RelativeLayout rl = (RelativeLayout)v;
+		RelativeLayout rl = (RelativeLayout) v;
 		tv = (TextView) rl.getChildAt(0);
 		fstr = tv.getText().toString();
-		
+
+		// Load animation for the fadein fadeout effect
 		final Animation in = AnimationUtils.loadAnimation(this, R.anim.fadein);
 		final Animation out = AnimationUtils.loadAnimation(this, R.anim.fadeout);
-		
+
 		tv.startAnimation(out);
 		tv.setTextSize(30f);
 		tv.setText("Das letzte Thema, das Unterrichtet wurde");
-		
+
 		tv.startAnimation(in);
-		new Handler().postDelayed(new Runnable()
-		{
-		   @Override
-		   public void run()
-		   {
-		     // your code here
-			   tv.startAnimation(out);
-			   tv.setTextSize(50f);
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				// your code here
+				tv.startAnimation(out);
+				tv.setTextSize(50f);
+				// Animation rollback
 				tv.setText(fstr);
 				tv.startAnimation(in);
-		   }
+			}
 		}, 4000/* 1sec delay */);
-		
+
 	}
-	
+
 	public void onClick_Unterricht_Fach_Quick(View v) {
 		LinearLayout parent = (LinearLayout) v.getParent();
 		RelativeLayout rl = (RelativeLayout) parent.getChildAt(0);
 		tv = (TextView) rl.getChildAt(0);
 		fstr = tv.getText().toString();
-		
+
+		// Load animation for the fadein fadeout effect
 		final Animation in = AnimationUtils.loadAnimation(this, R.anim.fadein);
 		final Animation out = AnimationUtils.loadAnimation(this, R.anim.fadeout);
 		
 		tv.startAnimation(out);
 		tv.setTextSize(30f);
 		tv.setText("Uebung 3 und 4 bei Seite 149");
-		
+
 		tv.startAnimation(in);
-		new Handler().postDelayed(new Runnable()
-		{
-		   @Override
-		   public void run()
-		   {
-		     // your code here
-			   tv.startAnimation(out);
-			   tv.setTextSize(50f);
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				// your code here
+				// Start animation
+				tv.startAnimation(out);
+				tv.setTextSize(50f);
+				// Context rollback
 				tv.setText(fstr);
 				tv.startAnimation(in);
-		   }
+			}
 		}, 4000/* 1sec delay */);
 	}
 

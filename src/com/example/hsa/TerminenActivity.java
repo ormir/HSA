@@ -16,8 +16,8 @@ public class TerminenActivity extends Activity {
 		setContentView(R.layout.activity_terminen);
 		// Show the Up button in the action bar.
 		setupActionBar();
-		
-		calendar = (CalendarView)findViewById(R.id.calendar);
+
+		calendar = (CalendarView) findViewById(R.id.calendar);
 	}
 
 	/**

@@ -50,8 +50,8 @@ public class SettingActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	public void onClick_Logout(View v){
+
+	public void onClick_Logout(View v) {
 		startActivityForResult(new Intent(this, LoginActivity.class), 1);
 	}
 

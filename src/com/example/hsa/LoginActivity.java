@@ -16,7 +16,7 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		
-		// Implementing the EditText from the xmliiiiiii
+		// Implementing the EditText from the xml
 		user = (EditText)findViewById(R.id.inputName);
 		pass = (EditText)findViewById(R.id.inputPass);
 		
