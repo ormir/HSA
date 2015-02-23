@@ -23,7 +23,9 @@
         android:id="@+id/inputName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/inputPass" >
+        android:layout_above="@+id/inputPass"
+        android:inputType="textEmailAddress"
+        android:hint="email: name@htl-shkoder.com" >
 
         <requestFocus />
     </EditText>
@@ -36,7 +38,8 @@
         android:layout_alignLeft="@+id/btnLogin"
         android:layout_marginBottom="20dp"
         android:ems="10"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:hint="password" />
 
     <ImageView
         android:id="@+id/imageView1"

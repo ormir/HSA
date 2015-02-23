@@ -125,8 +125,7 @@ public class LoginActivity extends Activity {
 						success = json.getInt(TAG_SUCCESS);
 						if (success == 1) {
 							// successfully received product details
-							JSONArray studentObj = json
-									.getJSONArray(TAG_STUDENT); // JSON Array
+							JSONArray studentObj = json.getJSONArray(TAG_STUDENT); // JSON Array
 
 							// get first product object from JSON Array
 							JSONObject student = studentObj.getJSONObject(0);

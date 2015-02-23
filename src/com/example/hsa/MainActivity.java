@@ -31,9 +31,14 @@ public class MainActivity extends Activity {
 	TextView tv;
 	Animation in;
 	Animation out;
+	String student_id;
 	
 	// url to get all products list
-	private static String url_timetable_student = "http://app.htl-shkoder.com.dd24526.kasserver.com/android_connect/get_timetable_student.php";
+	private static String url_main = "http://app.htl-shkoder.com.dd24526.kasserver.com/android_connect/";
+	private static String url_timetable_student = url_main + "get_timetable_student.php";
+	private static String url_get_main_grade = url_main + "get_main_grade.php";
+	private static String url_get_main_grade_quick = url_main + "get_main_grade_quick.php";
+	
 	JSONParser jParser = new JSONParser();
 	
 	// JSON Node names
@@ -51,11 +56,14 @@ public class MainActivity extends Activity {
 	
 	// Quick show text
 	private String timetableQuickString = "Loading ...";
+	private String gradesQuickString = "Loading ...";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		student_id = getIntent().getStringExtra(TAG_STUDENT_ID);
 		
 		// TODO Remove restricion for HTTPGet to run in main thread
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -71,7 +79,8 @@ public class MainActivity extends Activity {
 		
 		// Loading products in Background Thread
 		new GetTimetableDetails().execute();
-		
+		new GetGradeMain().execute();
+		new GetGradeQuick().execute();
 	}
 
 	@Override
@@ -136,7 +145,7 @@ public class MainActivity extends Activity {
 		
 		tv.startAnimation(out);
 		tv.setTextSize(30f);
-		tv.setText("9, 10, 10, 8, 10, 9, 10, 9, 10, 8, 10");
+		tv.setText(gradesQuickString);
 		
 		tv.startAnimation(in);
 		new Handler().postDelayed(new Runnable(){
@@ -304,14 +313,163 @@ public class MainActivity extends Activity {
 									((TextView)findViewById(R.id.main_stundenplan_quick_text)).setText(arrayStudent.getString(TAG_SUBJECT_ACR).toUpperCase());
 								}
 								
+								// Add comma to all elements beside the last one
 								if(i==(studentObj.length()-1)){
 									timetableQuickString +=  arrayStudent.getString(TAG_SUBJECT_ACR).toUpperCase();
 								} else{
-									timetableQuickString +=  arrayStudent.getString(TAG_SUBJECT_ACR).toUpperCase()+",";
+									timetableQuickString +=  arrayStudent.getString(TAG_SUBJECT_ACR).toUpperCase()+", ";
 								}
 							}
 						} else {
 							Toast.makeText(getApplicationContext(), "Timetable not feched", 
+									   Toast.LENGTH_SHORT).show();
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			return null;
+		}
+
+		/**
+		 * After completing background task Dismiss the progress dialog
+		 * **/
+		protected void onPostExecute(String file_url) {
+			//Toast.makeText(getApplicationContext(), "Timetable fech finished.", 
+				//	   Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	/**
+	 * Background Async Task to Get complete student details
+	 * */
+	class GetGradeMain extends AsyncTask<String, String, String> {
+
+		/**
+		 * Before starting background thread Show Progress Dialog
+		 * */
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+
+		/**
+		 * Getting product details in background thread
+		 * */
+		protected String doInBackground(String... params) {
+
+			// updating UI from Background Thread
+			runOnUiThread(new Runnable() {
+				public void run() {
+					// Check for success tag
+					int success;
+					try {
+						// Building Parameters
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+						params.add(new BasicNameValuePair("name", getIntent().getStringExtra("student_name")));
+
+						// getting product details by making HTTP request
+						// Note that product details url will use GET request
+						JSONObject json = jParser.makeHttpRequest(
+								url_get_main_grade, "GET", params);
+
+						// check your log for json response
+						//Log.d("Single Student Details", json.toString());
+
+						// json success tag
+						success = json.getInt(TAG_SUCCESS);
+						if (success == 1) {
+							// successfully received product details
+							JSONArray studentObj = json
+									.getJSONArray(TAG_STUDENT); // JSON Array
+							
+							gradesQuickString = "";
+
+							// get first product object from JSON Array
+							//Loop through all timetable elements
+							for(int i = 0; i < studentObj.length(); i++){
+								JSONObject arrayStudent = studentObj.getJSONObject(i);
+
+								// Add comma to all elements beside the last one
+								if(i==(studentObj.length()-1)){
+									gradesQuickString +=  arrayStudent.getString("avgGrade").toUpperCase();
+								} else{
+									gradesQuickString +=  arrayStudent.getString("avgGrade").toUpperCase()+", ";
+								}
+							}
+						} else {
+							Toast.makeText(getApplicationContext(), "Grades not feched", 
+									   Toast.LENGTH_SHORT).show();
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			return null;
+		}
+
+		/**
+		 * After completing background task Dismiss the progress dialog
+		 * **/
+		protected void onPostExecute(String file_url) {
+			//Toast.makeText(getApplicationContext(), "Timetable fech finished.", 
+				//	   Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	class GetGradeQuick extends AsyncTask<String, String, String> {
+
+		/**
+		 * Before starting background thread Show Progress Dialog
+		 * */
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+
+		/**
+		 * Getting product details in background thread
+		 * */
+		protected String doInBackground(String... params) {
+
+			// updating UI from Background Thread
+			runOnUiThread(new Runnable() {
+				public void run() {
+					// Check for success tag
+					int success;
+					try {
+						// Building Parameters
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+						params.add(new BasicNameValuePair("name", getIntent().getStringExtra("student_name")));
+
+						// getting product details by making HTTP request
+						// Note that product details url will use GET request
+						JSONObject json = jParser.makeHttpRequest(
+								url_get_main_grade_quick, "GET", params);
+
+						// check your log for json response
+						//Log.d("Single Student Details", json.toString());
+
+						// json success tag
+						success = json.getInt(TAG_SUCCESS);
+						if (success == 1) {
+							// successfully received product details
+							JSONArray studentObj = json
+									.getJSONArray(TAG_STUDENT); // JSON Array
+							
+							gradesQuickString = "";
+
+							// get first product object from JSON Array
+							//Loop through all timetable elements
+							for(int i = 0; i < studentObj.length(); i++){
+								JSONObject arrayStudent = studentObj.getJSONObject(i);
+								
+								((TextView)findViewById(R.id.txtMainNotenQuick)).setText(arrayStudent.getString("avgGrade"));
+							}
+						} else {
+							Toast.makeText(getApplicationContext(), "Grades not feched", 
 									   Toast.LENGTH_SHORT).show();
 						}
 					} catch (JSONException e) {
