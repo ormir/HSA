@@ -57,6 +57,7 @@ public class MainActivity extends Activity {
 	// Quick show text
 	private String timetableQuickString = "Loading ...";
 	private String gradesQuickString = "Loading ...";
+	private String materialQuickString = "Loading ...";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -301,8 +302,6 @@ public class MainActivity extends Activity {
 							JSONArray studentObj = json
 									.getJSONArray(TAG_STUDENT); // JSON Array
 							
-							timetableQuickString = "";
-
 							// get first product object from JSON Array
 							//Loop through all timetable elements
 							for(int i = 0; i < studentObj.length(); i++){
@@ -385,17 +384,18 @@ public class MainActivity extends Activity {
 									.getJSONArray(TAG_STUDENT); // JSON Array
 							
 							gradesQuickString = "";
-
+							
 							// get first product object from JSON Array
 							//Loop through all timetable elements
 							for(int i = 0; i < studentObj.length(); i++){
 								JSONObject arrayStudent = studentObj.getJSONObject(i);
-
+								String avgGrade = arrayStudent.getString("avgGrade").toUpperCase();
+								
 								// Add comma to all elements beside the last one
 								if(i==(studentObj.length()-1)){
-									gradesQuickString +=  arrayStudent.getString("avgGrade").toUpperCase();
+									gradesQuickString +=  avgGrade;
 								} else{
-									gradesQuickString +=  arrayStudent.getString("avgGrade").toUpperCase()+", ";
+									gradesQuickString +=  avgGrade + ", ";
 								}
 							}
 						} else {
@@ -459,7 +459,6 @@ public class MainActivity extends Activity {
 							JSONArray studentObj = json
 									.getJSONArray(TAG_STUDENT); // JSON Array
 							
-							gradesQuickString = "";
 
 							// get first product object from JSON Array
 							//Loop through all timetable elements
