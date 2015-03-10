@@ -38,6 +38,12 @@ public class MainActivity extends Activity {
 	private static String url_timetable_student = url_main + "get_timetable_student.php";
 	private static String url_get_main_grade = url_main + "get_main_grade.php";
 	private static String url_get_main_grade_quick = url_main + "get_main_grade_quick.php";
+	private static String url_get_main_material = url_main + "get_main_material.php";
+	private static String url_get_main_material_quick = url_main + "get_main_material_quick.php";
+	private static String url_get_main_absent = url_main + "get_main_absent.php";
+	private static String url_get_main_absent_quick = url_main + "get_main_absent_quick.php";
+	private static String url_get_main_schedules = url_main + "get_main_schedules.php";
+	private static String url_get_main_schedules_quick = url_main + "get_main_schedules_quick.php";
 	
 	JSONParser jParser = new JSONParser();
 	
@@ -58,6 +64,8 @@ public class MainActivity extends Activity {
 	private String timetableQuickString = "Loading ...";
 	private String gradesQuickString = "Loading ...";
 	private String materialQuickString = "Loading ...";
+	private String absentQuickString = "Loading ...";
+	private String schedulesQuickString = "Loading ...";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +90,12 @@ public class MainActivity extends Activity {
 		new GetTimetableDetails().execute();
 		new GetGradeMain().execute();
 		new GetGradeQuick().execute();
+		new GetMaterialMain().execute();
+		new GetMaterialQuick().execute();
+		new GetAbsentMain().execute();
+		new GetAbsentQuick().execute();
+		new GetSchedulesMain().execute();
+		new GetSchedulesQuick().execute();
 	}
 
 	@Override
@@ -176,7 +190,7 @@ public class MainActivity extends Activity {
 		
 		tv.startAnimation(out);
 		tv.setTextSize(30f);
-		tv.setText("AL, D, AM");
+		tv.setText(materialQuickString);
 		
 		tv.startAnimation(in);
 		new Handler().postDelayed(new Runnable(){
@@ -206,7 +220,7 @@ public class MainActivity extends Activity {
 		
 		tv.startAnimation(out);
 		tv.setTextSize(30f);
-		tv.setText("MAV, SCG, NUF, NUF");
+		tv.setText(absentQuickString);
 		
 		tv.startAnimation(in);
 		new Handler().postDelayed(new Runnable()
@@ -237,7 +251,7 @@ public class MainActivity extends Activity {
 		
 		tv.startAnimation(out);
 		tv.setTextSize(30f);
-		tv.setText("DA Praesentation, D Matura ...");
+		tv.setText(schedulesQuickString);
 		
 		tv.startAnimation(in);
 		new Handler().postDelayed(new Runnable(){
@@ -301,6 +315,9 @@ public class MainActivity extends Activity {
 							// successfully received product details
 							JSONArray studentObj = json
 									.getJSONArray(TAG_STUDENT); // JSON Array
+							
+							// empty string before writing
+							timetableQuickString = "";
 							
 							// get first product object from JSON Array
 							//Loop through all timetable elements
@@ -469,6 +486,421 @@ public class MainActivity extends Activity {
 							}
 						} else {
 							Toast.makeText(getApplicationContext(), "Grades not feched", 
+									   Toast.LENGTH_SHORT).show();
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			return null;
+		}
+
+		/**
+		 * After completing background task Dismiss the progress dialog
+		 * **/
+		protected void onPostExecute(String file_url) {
+			//Toast.makeText(getApplicationContext(), "Timetable fech finished.", 
+				//	   Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	class GetMaterialMain extends AsyncTask<String, String, String> {
+
+		/**
+		 * Before starting background thread Show Progress Dialog
+		 * */
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+
+		/**
+		 * Getting product details in background thread
+		 * */
+		protected String doInBackground(String... params) {
+
+			// updating UI from Background Thread
+			runOnUiThread(new Runnable() {
+				public void run() {
+					// Check for success tag
+					int success;
+					try {
+						// Building Parameters
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+						params.add(new BasicNameValuePair("class_id", "1"));
+
+						// getting product details by making HTTP request
+						// Note that product details url will use GET request
+						JSONObject json = jParser.makeHttpRequest(
+								url_get_main_material, "GET", params);
+
+						// check your log for json response
+						//Log.d("Single Student Details", json.toString());
+						
+						materialQuickString = "";
+
+						// json success tag
+						success = json.getInt(TAG_SUCCESS);
+						if (success == 1) {
+							// successfully received product details
+							JSONArray studentObj = json
+									.getJSONArray(TAG_STUDENT); // JSON Array
+							
+							// get first product object from JSON Array
+							//Loop through all timetable elements
+							for(int i = 0; i < studentObj.length(); i++){
+								JSONObject arrayStudent = studentObj.getJSONObject(i);
+								// product with this pid found
+								
+								// Add comma to all elements beside the last one
+								if(i==(studentObj.length()-1)){
+									materialQuickString +=  arrayStudent.getString("acronym").toUpperCase();
+								} else{
+									materialQuickString +=  arrayStudent.getString("acronym").toUpperCase()+", ";
+								}
+							}
+						} else {
+							Toast.makeText(getApplicationContext(), "Teaching material not feched", 
+									   Toast.LENGTH_SHORT).show();
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			return null;
+		}
+
+		/**
+		 * After completing background task Dismiss the progress dialog
+		 * **/
+		protected void onPostExecute(String file_url) {
+			//Toast.makeText(getApplicationContext(), "Timetable fech finished.", 
+				//	   Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	class GetMaterialQuick extends AsyncTask<String, String, String> {
+
+		/**
+		 * Before starting background thread Show Progress Dialog
+		 * */
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+
+		/**
+		 * Getting product details in background thread
+		 * */
+		protected String doInBackground(String... params) {
+
+			// updating UI from Background Thread
+			runOnUiThread(new Runnable() {
+				public void run() {
+					// Check for success tag
+					int success;
+					try {
+						// Building Parameters
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+						params.add(new BasicNameValuePair("class_id", "1"));
+
+						// getting product details by making HTTP request
+						// Note that product details url will use GET request
+						JSONObject json = jParser.makeHttpRequest(
+								url_get_main_material_quick, "GET", params);
+
+						// json success tag
+						success = json.getInt(TAG_SUCCESS);
+						if (success == 1) {
+							// successfully received product details
+							JSONArray studentObj = json
+									.getJSONArray(TAG_STUDENT); // JSON Array
+							
+							// get first product object from JSON Array
+							//Loop through all timetable elements
+							for(int i = 0; i < studentObj.length(); i++){
+								JSONObject arrayStudent = studentObj.getJSONObject(i);
+								// product with this pid found
+								((TextView)findViewById(R.id.TextView02)).setText(arrayStudent.getString("acronym"));
+							}
+						} else {
+							Toast.makeText(getApplicationContext(), "Teaching material not feched", 
+									   Toast.LENGTH_SHORT).show();
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			return null;
+		}
+
+		/**
+		 * After completing background task Dismiss the progress dialog
+		 * **/
+		protected void onPostExecute(String file_url) {
+			//Toast.makeText(getApplicationContext(), "Timetable fech finished.", 
+				//	   Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	class GetAbsentMain extends AsyncTask<String, String, String> {
+
+		/**
+		 * Before starting background thread Show Progress Dialog
+		 * */
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+
+		/**
+		 * Getting product details in background thread
+		 * */
+		protected String doInBackground(String... params) {
+
+			// updating UI from Background Thread
+			runOnUiThread(new Runnable() {
+				public void run() {
+					// Check for success tag
+					int success;
+					try {
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+						params.add(new BasicNameValuePair("", ""));
+						// getting product details by making HTTP request
+						// Note that product details url will use GET request
+						JSONObject json = jParser.makeHttpRequest(
+								url_get_main_absent, "GET", params);
+
+						// check your log for json response
+						//Log.d("Single Student Details", json.toString());
+						
+						absentQuickString = "";
+
+						// json success tag
+						success = json.getInt(TAG_SUCCESS);
+						if (success == 1) {
+							// successfully received product details
+							JSONArray studentObj = json
+									.getJSONArray(TAG_STUDENT); // JSON Array
+							
+							// get first product object from JSON Array
+							//Loop through all timetable elements
+							for(int i = 0; i < studentObj.length(); i++){
+								JSONObject arrayStudent = studentObj.getJSONObject(i);
+								// product with this pid found
+								
+								// Add comma to all elements beside the last one
+								if(i==(studentObj.length()-1)){
+									absentQuickString +=  arrayStudent.getString("acronym").toUpperCase();
+								} else{
+									absentQuickString +=  arrayStudent.getString("acronym").toUpperCase()+", ";
+								}
+							}
+						} else {
+							Toast.makeText(getApplicationContext(), "Absent not feched", 
+									   Toast.LENGTH_SHORT).show();
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			return null;
+		}
+
+		/**
+		 * After completing background task Dismiss the progress dialog
+		 * **/
+		protected void onPostExecute(String file_url) {
+			//Toast.makeText(getApplicationContext(), "Timetable fech finished.", 
+				//	   Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	class GetAbsentQuick extends AsyncTask<String, String, String> {
+
+		/**
+		 * Before starting background thread Show Progress Dialog
+		 * */
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+
+		/**
+		 * Getting product details in background thread
+		 * */
+		protected String doInBackground(String... params) {
+
+			// updating UI from Background Thread
+			runOnUiThread(new Runnable() {
+				public void run() {
+					// Check for success tag
+					int success;
+					try {
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+						params.add(new BasicNameValuePair("", ""));
+						// getting product details by making HTTP request
+						// Note that product details url will use GET request
+						JSONObject json = jParser.makeHttpRequest(
+								url_get_main_absent_quick, "GET", params);
+						
+						// json success tag
+						success = json.getInt(TAG_SUCCESS);
+						if (success == 1) {
+							// successfully received product details
+							JSONArray studentObj = json
+									.getJSONArray(TAG_STUDENT); // JSON Array
+							
+							// get first product object from JSON Array
+							//Loop through all timetable elements
+							for(int i = 0; i < studentObj.length(); i++){
+								JSONObject arrayStudent = studentObj.getJSONObject(i);
+								// product with this pid found
+								((TextView)findViewById(R.id.TextView03)).setText(arrayStudent.getString("acronym"));
+							}
+						} else {
+							Toast.makeText(getApplicationContext(), "Absent not feched", 
+									   Toast.LENGTH_SHORT).show();
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			return null;
+		}
+
+		/**
+		 * After completing background task Dismiss the progress dialog
+		 * **/
+		protected void onPostExecute(String file_url) {
+			//Toast.makeText(getApplicationContext(), "Timetable fech finished.", 
+				//	   Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	class GetSchedulesMain extends AsyncTask<String, String, String> {
+
+		/**
+		 * Before starting background thread Show Progress Dialog
+		 * */
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+
+		/**
+		 * Getting product details in background thread
+		 * */
+		protected String doInBackground(String... params) {
+
+			// updating UI from Background Thread
+			runOnUiThread(new Runnable() {
+				public void run() {
+					// Check for success tag
+					int success;
+					try {
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+						params.add(new BasicNameValuePair("",""));
+						// getting product details by making HTTP request
+						// Note that product details url will use GET request
+						JSONObject json = jParser.makeHttpRequest(
+								url_get_main_schedules, "GET", params);
+
+						// check your log for json response
+						//Log.d("Single Student Details", json.toString());
+						
+						schedulesQuickString = "";
+
+						// json success tag
+						success = json.getInt(TAG_SUCCESS);
+						if (success == 1) {
+							// successfully received product details
+							JSONArray studentObj = json
+									.getJSONArray(TAG_STUDENT); // JSON Array
+							
+							// get first product object from JSON Array
+							//Loop through all timetable elements
+							for(int i = 0; i < studentObj.length(); i++){
+								JSONObject arrayStudent = studentObj.getJSONObject(i);
+								// product with this pid found
+								
+								// Add comma to all elements beside the last one
+								if(i==(studentObj.length()-1)){
+									schedulesQuickString +=  arrayStudent.getString("description");
+								} else{
+									schedulesQuickString +=  arrayStudent.getString("description") + ", ";
+								}
+							}
+						} else {
+							Toast.makeText(getApplicationContext(), "Schedules not feched", 
+									   Toast.LENGTH_SHORT).show();
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
+			});
+			return null;
+		}
+
+		/**
+		 * After completing background task Dismiss the progress dialog
+		 * **/
+		protected void onPostExecute(String file_url) {
+			//Toast.makeText(getApplicationContext(), "Timetable fech finished.", 
+				//	   Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	class GetSchedulesQuick extends AsyncTask<String, String, String> {
+
+		/**
+		 * Before starting background thread Show Progress Dialog
+		 * */
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+		}
+
+		/**
+		 * Getting product details in background thread
+		 * */
+		protected String doInBackground(String... params) {
+
+			// updating UI from Background Thread
+			runOnUiThread(new Runnable() {
+				public void run() {
+					// Check for success tag
+					int success;
+					try {
+						List<NameValuePair> params = new ArrayList<NameValuePair>();
+						params.add(new BasicNameValuePair("", ""));
+						// getting product details by making HTTP request
+						// Note that product details url will use GET request
+						JSONObject json = jParser.makeHttpRequest(
+								url_get_main_schedules_quick, "GET", params);
+						
+						// json success tag
+						success = json.getInt(TAG_SUCCESS);
+						if (success == 1) {
+							// successfully received product details
+							JSONArray studentObj = json
+									.getJSONArray(TAG_STUDENT); // JSON Array
+							
+							// get first product object from JSON Array
+							//Loop through all timetable elements
+							for(int i = 0; i < studentObj.length(); i++){
+								JSONObject arrayStudent = studentObj.getJSONObject(i);
+								// product with this pid found
+								((TextView)findViewById(R.id.textView6)).setText(arrayStudent.getString("description"));
+							}
+						} else {
+							Toast.makeText(getApplicationContext(), "Schedules not feched", 
 									   Toast.LENGTH_SHORT).show();
 						}
 					} catch (JSONException e) {

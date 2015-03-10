@@ -1,7 +1,12 @@
 package com.example.hsa;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -11,9 +16,11 @@ import org.json.JSONObject;
 
 import com.example.hsa.JSONParser;
 
+import android.R.string;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -36,17 +43,16 @@ public class LoginActivity extends Activity {
 	private ProgressDialog pDialog;
 
 	// url to get all products list
-	private static String url_student_detail = "http://app.htl-shkoder.com.dd24526.kasserver.com/android_connect/student_login.php";
-
-	// JSON Node names
-	private static final String TAG_SUCCESS = "success";
-	private static final String TAG_STUDENT = "student";
-	private static final String TAG_STUDENT_ID = "student_id";
-	private static final String TAG_NAME = "name";
-	private static final String TAG_LASTNAME = "lastname";
+	private static String url_student_detail = "http://app.htl-shkoder.com.dd24526.kasserver.com/android_connect/get_login.php";
 
 	// studens JSONArray
 	JSONArray student = null;
+	String [][] studentStringArray = null;
+	int success = 0;
+	
+	// Shared Preferences variable
+	SharedPreferences sharedPrefs;
+	SharedPreferences.Editor editSharedPrefs;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +62,10 @@ public class LoginActivity extends Activity {
 		// TODO Remove restricion for HTTPGet to run in main thread
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 		StrictMode.setThreadPolicy(policy);
+		
+		// initialise shared preferences
+		sharedPrefs = getSharedPreferences("HSAUserPrefs", Activity.MODE_PRIVATE);
+		editSharedPrefs = sharedPrefs.edit();
 		
 		// Implementing the EditText from the xml
 		eTxtUser = (EditText)findViewById(R.id.inputName);
@@ -74,7 +84,25 @@ public class LoginActivity extends Activity {
 	 */
 	public void onClick_Login(View v){
 		inputUser = eTxtUser.getText().toString();
+		
+		// Pass to MD5 Hash
 		inputPassword = eTxtPass.getText().toString();
+		try {
+			MessageDigest m = MessageDigest.getInstance("MD5");
+			m.reset();
+			m.update(inputPassword.getBytes());
+			byte[] digest = m.digest();
+			BigInteger bigInt = new BigInteger(1,digest);
+			String hashtext = bigInt.toString(16);
+			while(hashtext.length() < 32 ){
+				  hashtext = "0"+hashtext;
+			}
+			inputPassword = hashtext;
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 		// Loading student in Background Thread
 		new GetStudentDetails().execute();
@@ -107,38 +135,66 @@ public class LoginActivity extends Activity {
 			runOnUiThread(new Runnable() {
 				public void run() {
 					// Check for success tag
-					int success;
 					try {
 						// Building Parameters
 						List<NameValuePair> params = new ArrayList<NameValuePair>();
-						params.add(new BasicNameValuePair(TAG_NAME, inputUser));
+						params.add(new BasicNameValuePair("name", inputUser));
+						params.add(new BasicNameValuePair("password", inputPassword));
 
 						// getting product details by making HTTP request
 						// Note that product details url will use GET request
 						JSONObject json = jParser.makeHttpRequest(
 								url_student_detail, "GET", params);
+						
+						if( json != null){
+							// json success tag
+							success = json.getInt("success");
+							if (success == 1) {
+								
+								Toast.makeText(getApplicationContext(), "Loggin successful", 
+										   Toast.LENGTH_SHORT).show();
+								
+								// Remove success entry from JSON Array
+								json.remove("success");
+								
+								JSONArray jsNames = json.names();
+								JSONArray[] response = new JSONArray[jsNames.length()];
+								Set<String> setResponse = new HashSet<String>();
+								
+								for(int i = 0; i< jsNames.length(); i++){
+									// Get key name
+									String arrayName = jsNames.getString(i);
 
-						// check your log for json response
-						//Log.d("Single Student Details", json.toString());
-
-						// json success tag
-						success = json.getInt(TAG_SUCCESS);
-						if (success == 1) {
-							// successfully received product details
-							JSONArray studentObj = json.getJSONArray(TAG_STUDENT); // JSON Array
-
-							// get first product object from JSON Array
-							JSONObject student = studentObj.getJSONObject(0);
-
-							// product with this pid found
-							// display product data in EditText
-							// Checks if username and pass are true 
-							if(eTxtPass.getText().toString().equals("pass")){
-								startActivity(new Intent(LoginActivity.this, MainActivity.class).putExtra(TAG_STUDENT_ID, student.getString(TAG_STUDENT_ID))
-																								.putExtra("student_name", student.getString(TAG_NAME)));
+									// Check if key exist before calling it
+									if(json.has(arrayName)){
+										response[i] = json.getJSONArray(arrayName);
+										for(int j = 0; j< response[i].length(); j++){
+											setResponse.add(arrayName + "$" + j + "$$" + response[i].getString(j));
+										}
+									} else{
+										Log.d("Element NULL" + i, arrayName);
+									}
+								}
+								
+								//Save responce to shared preferences
+								sharedPrefs.edit().putStringSet("login", setResponse);
+								
+//								Decode saved responce
+//								for(String setString : setResponse){
+//									char[] setStringValue = null;
+//									if(setString.contains("student")){
+//										int valueBegin = setString.lastIndexOf("$") + 1;
+//										setStringValue = new char[setString.length() - valueBegin];
+//										setString.getChars(valueBegin, setString.length(), setStringValue, 0);
+//										Log.d("SET: ", new String(setStringValue));
+//									}
+//								}
+							} else {
+								Toast.makeText(getApplicationContext(), "Username or Password incorrect. Please try again.", 
+										   Toast.LENGTH_SHORT).show();
 							}
-						} else {
-							Toast.makeText(getApplicationContext(), "Username incorrect. Please try again.", 
+						}else {
+							Toast.makeText(getApplicationContext(), "Check network connection", 
 									   Toast.LENGTH_SHORT).show();
 						}
 					} catch (JSONException e) {
@@ -155,6 +211,11 @@ public class LoginActivity extends Activity {
 		protected void onPostExecute(String file_url) {
 			// dismiss the dialog once got all details
 			pDialog.dismiss();
+			
+			// Check if data were fetched to start activity
+			if(success == 1){
+				startActivity(new Intent(getApplicationContext(), MainActivity.class));
+			}
 		}
 	}
 

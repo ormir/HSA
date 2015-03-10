@@ -57,6 +57,7 @@ public class JSONParser {
                 DefaultHttpClient httpClient = new DefaultHttpClient();
                 String paramString = URLEncodedUtils.format(params, "utf-8");
                 url += "?" + paramString;
+                Log.d("Sent URL: ", url);
                 HttpGet httpGet = new HttpGet(url);
  
                 HttpResponse httpResponse = httpClient.execute(httpGet);
