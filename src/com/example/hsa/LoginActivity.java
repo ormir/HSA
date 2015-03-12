@@ -24,6 +24,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -64,7 +65,7 @@ public class LoginActivity extends Activity {
 		StrictMode.setThreadPolicy(policy);
 		
 		// initialise shared preferences
-		sharedPrefs = getSharedPreferences("HSAUserPrefs", Activity.MODE_PRIVATE);
+		sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);;
 		editSharedPrefs = sharedPrefs.edit();
 		
 		// Implementing the EditText from the xml
@@ -151,44 +152,28 @@ public class LoginActivity extends Activity {
 							success = json.getInt("success");
 							if (success == 1) {
 								
-								Toast.makeText(getApplicationContext(), "Loggin successful", 
-										   Toast.LENGTH_SHORT).show();
+//								Toast.makeText(getApplicationContext(), "Loggin successful", 
+//										   Toast.LENGTH_SHORT).show();
 								
-								// Remove success entry from JSON Array
+								// Remove 'success' entry from JSON Array
 								json.remove("success");
 								
 								JSONArray jsNames = json.names();
 								JSONArray[] response = new JSONArray[jsNames.length()];
-								Set<String> setResponse = new HashSet<String>();
-								
+								String responseName = "";
 								for(int i = 0; i< jsNames.length(); i++){
-									// Get key name
-									String arrayName = jsNames.getString(i);
-
-									// Check if key exist before calling it
-									if(json.has(arrayName)){
-										response[i] = json.getJSONArray(arrayName);
-										for(int j = 0; j< response[i].length(); j++){
-											setResponse.add(arrayName + "$" + j + "$$" + response[i].getString(j));
-										}
-									} else{
-										Log.d("Element NULL" + i, arrayName);
+									String strResponse = "";
+									String setName = jsNames.getString(i);
+									responseName += setName + ",";
+									response[i] = json.getJSONArray(setName);
+									for(int j = 0; j< response[i].length(); j++){
+										strResponse += response[i].getString(j) + ",";
 									}
+									sharedPrefs.edit().putString(setName, strResponse).commit();
+									//Log.d("RESPONSE STR", strResponse);
 								}
-								
+								sharedPrefs.edit().putString("login_name", responseName).commit();
 								//Save responce to shared preferences
-								sharedPrefs.edit().putStringSet("login", setResponse);
-								
-//								Decode saved responce
-//								for(String setString : setResponse){
-//									char[] setStringValue = null;
-//									if(setString.contains("student")){
-//										int valueBegin = setString.lastIndexOf("$") + 1;
-//										setStringValue = new char[setString.length() - valueBegin];
-//										setString.getChars(valueBegin, setString.length(), setStringValue, 0);
-//										Log.d("SET: ", new String(setStringValue));
-//									}
-//								}
 							} else {
 								Toast.makeText(getApplicationContext(), "Username or Password incorrect. Please try again.", 
 										   Toast.LENGTH_SHORT).show();
